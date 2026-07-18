@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World Atlas Explorer</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --bg-light: #ecf0f1;
+            --text-dark: #333;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            color: var(--text-dark);
+        }
+
+        /* Header Layout */
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        header h1 {
+            font-size: 1.5rem;
+        }
+
+        /* Main Workspace */
+        .main-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* Sidebar Navigation */
+        aside {
+            width: 280px;
+            background-color: #fff;
+            border-right: 1px solid #ddd;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .search-box {
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .region-list {
+            list-style: none;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .region-item {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            border-bottom: 1px solid #f9f9f9;
+            transition: background 0.2s;
+        }
+
+        .region-item:hover, .region-item.active {
+            background-color: var(--bg-light);
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+
+        /* Content Area Layout */
+        main {
+            flex: 1;
+            padding: 2rem;
+            background-color: var(--bg-light);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        /* Map Viewer Box */
+        .map-viewer {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            text-align: center;
+            min-height: 350px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .map-placeholder {
+            width: 100%;
+            max-width: 600px;
+            height: 300px;
+            background-color: #e0e7ff;
+            border: 2px dashed var(--accent-color);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4f46e5;
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+
+        /* Quick Facts Panel */
+        .facts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .fact-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .fact-card h3 {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .fact-card p {
+            font-size: 1.25rem;
+            font-weight: bold;
+        }
+
+        footer {
+            background-color: var(--primary-color);
+            color: #bdc3c7;
+            text-align: center;
+            padding: 0.75rem;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>GeoAtlas Lite</h1>
+        <div id="current-time">Interactive Digital Atlas</div>
+    </header>
+
+    <div class="main-container">
+        <!-- Sidebar Menu -->
+        <aside>
+            <div class="search-box">
+                <input type="text" id="search" placeholder="Search destinations..." onkeyup="filterLocations()">
+            </div>
+            <ul class="region-list" id="location-list">
+                <li class="region-item active" onclick="updateAtlas('world')">🌏 Global Overview</li>
+                <li class="region-item" onclick="updateAtlas('na')">North America</li>
+                <li class="region-item" onclick="updateAtlas('sa')">South America</li>
+                <li class="region-item" onclick="updateAtlas('eu')">Europe</li>
+                <li class="region-item" onclick="updateAtlas('as')">Asia</li>
+                <li class="region-item" onclick="updateAtlas('af')">Africa</li>
+                <li class="region-item" onclick="updateAtlas('oc')">Oceania</li>
+            </ul>
+        </aside>
+
+        <!-- Main Content Pane -->
+        <main>
+            <section class="map-viewer">
+                <h2 id="region-title">Global Overview</h2>
+                <!-- In a production app, replace this div with an <img> tag or an <iframe> to OpenStreetMap/Google Maps -->
+                <div class="map-placeholder" id="map-render">
+                    [ Interactive Map Projection Display ]
+                </div>
+            </section>
+
+            <!-- Dynamic Fact Sheets -->
+            <section class="facts-grid">
+                <div class="fact-card">
+                    <h3>Capital / Center</h3>
+                    <p id="fact-capital">N/A</p>
+                </div>
+                <div class="fact-card">
+                    <h3>Approx. Population</h3>
+                    <p id="fact-pop">8.0 Billion</p>
+                </div>
+                <div class="fact-card">
+                    <h3>Major Currency</h3>
+                    <p id="fact-currency">Multi-currency</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 GeoAtlas Project. Built with clean HTML5 & CSS3.</p>
+    </footer>
+
+    <!-- Frontend logic for switching data dynamic views -->
+    <script>
+        // Mock dataset to simulate database records
+        const atlasData = {
+            world: { title: "Global Overview", capital: "N/A", pop: "8.0 Billion", currency: "Various", color: "#e0e7ff" },
+            na: { title: "North America", capital: "Washington D.C. (Largest Econ)", pop: "579 Million", currency: "USD, CAD, MXN", color: "#fed7aa" },
+            sa: { title: "South America", capital: "Brasília (Largest City)", pop: "434 Million", currency: "BRL, ARS, COP", color: "#bbf7d0" },
+            eu: { title: "Europe", capital: "Brussels (EU Hub)", pop: "746 Million", currency: "EUR, GBP, CHF", color: "#bfdbfe" },
+            as: { title: "Asia", capital: "Tokyo (Largest Metro)", pop: "4.7 Billion", currency: "CNY, JPY, INR", color: "#fef08a" },
+            af: { title: "Africa", capital: "Cairo (Historical Center)", pop: "1.4 Billion", currency: "ZAR, EGP, NGN", color: "#fed7d7" },
+            oc: { title: "Oceania", capital: "Canberra / Wellington", pop: "44 Million", currency: "AUD, NZD, FJD", color: "#c084fc" }
+        };
+
+        function updateAtlas(regionKey) {
+            const data = atlasData[regionKey];
+            
+            // Update Text Details
+            document.getElementById('region-title').innerText = data.title;
+            document.getElementById('fact-capital').innerText = data.capital;
+            document.getElementById('fact-pop').innerText = data.pop;
+            document.getElementById('fact-currency').innerText = data.currency;
+            
+            // Update Map Visual Component Box (Color variation simulates different map renders)
+            const mapBox = document.getElementById('map-render');
+            mapBox.style.backgroundColor = data.color;
+            mapBox.innerText = `[ Active Map Projection Layer: ${data.title} ]`;
+
+            // Toggle active menu highlighting
+            const items = document.querySelectorAll('.region-item');
+            items.forEach(item => item.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+        }
+
+        // Basic client-side search filtering
+        function filterLocations() {
+            const input = document.getElementById('search').value.toLowerCase();
+            const items = document.querySelectorAll('.region-item');
+            
+            items.forEach(item => {
+                const text = item.innerText.toLowerCase();
+                item.style.display = text.includes(input) ? "" : "none";
+            });
+        }
+    </script>
+</body>
+</html>
