@@ -1,0 +1,231 @@
+/* ==========================================================================
+   1. Design Tokens & Variables
+   ========================================================================== */
+:root {
+    /* Color Palette */
+    --color-primary: #1e293b;    /* Deep slate blue for headers */
+    --color-secondary: #0f172a;  /* Darker slate for body text/accents */
+    --color-accent: #2563eb;     /* True blue for active items and highlights */
+    --color-accent-hover: #1d4ed8;
+    
+    /* Backgrounds */
+    --bg-app: #f8fafc;           /* Light cool grey canvas */
+    --bg-card: #ffffff;          /* Clean white containers */
+    --bg-sidebar-hover: #f1f5f9; /* Soft contrast for list hovers */
+    
+    /* UI Borders & Shadows */
+    --border-light: #e2e8f0;
+    --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+    
+    /* Animation Values */
+    --transition-fast: 0.2s ease;
+}
+
+/* ==========================================================================
+   2. Reset & Typography Foundations
+   ========================================================================== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--color-secondary);
+    background-color: var(--bg-app);
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ==========================================================================
+   3. Application Layout Structure
+   ========================================================================== */
+header {
+    background-color: var(--color-primary);
+    color: #ffffff;
+    padding: 1.25rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--shadow-sm);
+    z-index: 10;
+}
+
+header h1 {
+    font-size: 1.35rem;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+}
+
+#current-time {
+    font-size: 0.875rem;
+    color: #94a3b8;
+    font-weight: 500;
+}
+
+.main-container {
+    display: flex;
+    flex: 1;
+    overflow: hidden; /* Prevents viewport breaking scrollbars */
+}
+
+/* ==========================================================================
+   4. Sidebar Panel Navigation
+   ========================================================================== */
+aside {
+    width: 300px;
+    background-color: var(--bg-card);
+    border-right: 1px solid var(--border-light);
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow-sm);
+}
+
+.search-box {
+    padding: 1.25rem;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.search-box input {
+    width: 100%;
+    padding: 0.625rem 0.875rem;
+    font-size: 0.875rem;
+    color: var(--color-secondary);
+    background-color: #ffffff;
+    border: 1px solid var(--border-light);
+    border-radius: 6px;
+    transition: all var(--transition-fast);
+}
+
+.search-box input:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.region-list {
+    list-style: none;
+    overflow-y: auto;
+    flex: 1;
+    padding: 0.5rem 0;
+}
+
+.region-item {
+    margin: 0.25rem 0.75rem;
+    padding: 0.75rem 1rem;
+    font-size: 0.925rem;
+    font-weight: 500;
+    color: #475569;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.region-item:hover {
+    background-color: var(--bg-sidebar-hover);
+    color: var(--color-secondary);
+}
+
+.region-item.active {
+    background-color: rgba(37, 99, 235, 0.1);
+    color: var(--color-accent);
+    font-weight: 600;
+}
+
+/* ==========================================================================
+   5. Dynamic Workspace Viewport
+   ========================================================================== */
+main {
+    flex: 1;
+    padding: 2.5rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.map-viewer {
+    background-color: var(--bg-card);
+    border-radius: 12px;
+    padding: 2rem;
+    border: 1px solid var(--border-light);
+    box-shadow: var(--shadow-md);
+}
+
+.map-viewer h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1.25rem;
+    letter-spacing: -0.02em;
+}
+
+.map-placeholder {
+    width: 100%;
+    height: 400px;
+    background-color: #eff6ff;
+    border: 2px dashed #b91c1c; /* Kept visible for mock structural design */
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-accent);
+    font-weight: 600;
+    font-size: 1rem;
+    transition: background-color var(--transition-fast);
+}
+
+/* ==========================================================================
+   6. Data Grid Metrics
+   ========================================================================== */
+.facts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+}
+
+.fact-card {
+    background-color: var(--bg-card);
+    padding: 1.5rem;
+    border-radius: 10px;
+    border: 1px solid var(--border-light);
+    box-shadow: var(--shadow-sm);
+    transition: transform var(--transition-fast);
+}
+
+.fact-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.fact-card h3 {
+    font-size: 0.75rem;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.fact-card p {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--color-secondary);
+}
+
+/* ==========================================================================
+   7. Footer
+   ========================================================================== */
+footer {
+    background-color: var(--color-primary);
+    border-top: 1px solid #334155;
+    color: #94a3b8;
+    text-align: center;
+    padding: 1rem;
+    font-size: 0.825rem;
+    font-weight: 500;
+}
